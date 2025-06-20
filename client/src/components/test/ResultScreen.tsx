@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useTest } from '@/contexts/TestContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -116,6 +115,55 @@ export function ResultScreen() {
     }
   }, [testResults, typeData, language]);
 
+  const getDetailedCompatibleMatch = (testResults: any, language: string) => {
+    const tetoPercentage = testResults.tetoPercentage;
+    const estrogenPercentage = testResults.estrogenPercentage;
+    const gender = testResults.gender;
+
+    // For males, recommend females; for females, recommend males
+    if (gender === 'male') {
+      if (estrogenPercentage > 80) {
+        return t('초강력 에겐녀', 'Super Estrogen Woman');
+      } else if (estrogenPercentage > 60) {
+        return t('강력 에겐녀', 'Strong Estrogen Woman');
+      } else if (tetoPercentage > 60) {
+        return t('테토녀', 'Teto Woman');
+      } else {
+        return t('에겐녀', 'Estrogen Woman');
+      }
+    } else {
+      if (tetoPercentage > 80) {
+        return t('초강력 테토남', 'Super Teto Man');
+      } else if (tetoPercentage > 60) {
+        return t('강력 테토남', 'Strong Teto Man');
+      } else if (estrogenPercentage > 60) {
+        return t('에겐남', 'Estrogen Man');
+      } else {
+        return t('테토남', 'Teto Man');
+      }
+    }
+  };
+
+  const getCompatibleMatchReason = (testResults: any, language: string) => {
+    const tetoPercentage = testResults.tetoPercentage;
+    const estrogenPercentage = testResults.estrogenPercentage;
+    const gender = testResults.gender;
+
+    if (gender === 'male') {
+      if (estrogenPercentage > 60) {
+        return t('당신은 에겐 성향이 강해, 감성적이고 공감 능력이 뛰어난 여성과 잘 어울립니다.', 'You have a strong Estrogen tendency, so you get along well with emotional and empathetic women.');
+      } else {
+        return t('당신은 테토 성향이 강해, 활동적이고 에너지가 넘치는 여성과 잘 어울립니다.', 'You have a strong Teto tendency, so you get along well with active and energetic women.');
+      }
+    } else {
+      if (tetoPercentage > 60) {
+        return t('당신은 테토 성향이 강해, 리더십 있고 강인한 남성과 잘 어울립니다.', 'You have a strong Teto tendency, so you get along well with leadership and strong men.');
+      } else {
+        return t('당신은 에겐 성향이 강해, 감성적이고 배려심 있는 남성과 잘 어울립니다.', 'You have a strong Estrogen tendency, so you get along well with emotional and caring men.');
+      }
+    }
+  };
+
   return (
     <div className="animate-slide-up relative">
       {/* Background Image */}
@@ -146,19 +194,19 @@ export function ResultScreen() {
               </div>
             </div>
           </div>
-          
+
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
             {t('당신의 성격 유형', 'Your Personality Type')}
           </h2>
-          
+
           <div className={`inline-flex items-center px-8 py-4 text-white rounded-full font-bold text-2xl shadow-2xl ${getIntensityColor(testResults.intensity)} transform hover:scale-105 transition-transform`}>
             {getIntensityLabel(testResults.intensity, language)} {typeData.title}
           </div>
-          
+
           <p className="text-gray-600 dark:text-gray-400 mt-3 text-lg font-medium">
             {typeData.subtitle}
           </p>
-          
+
           <p className="text-gray-700 dark:text-gray-300 mt-4 text-xl leading-relaxed max-w-2xl mx-auto">
             {typeData.description}
           </p>
@@ -247,10 +295,10 @@ export function ResultScreen() {
             </div>
             <div>
               <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {typeData.compatibleType}
+                {getDetailedCompatibleMatch(testResults, language)}
               </h4>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
-                {typeData.compatibleDescription}
+                {getCompatibleMatchReason(testResults, language)}
               </p>
             </div>
           </div>
@@ -269,7 +317,7 @@ export function ResultScreen() {
         <Button
           onClick={handleRetake}
           variant="secondary"
-          className="flex items-center justify-center bg-white/90 hover:bg-white border-2 border-gray-300 hover:border-gray-400 px-8 py-4 text-lg font-semibold shadow-xl transform hover:scale-105 transition-all"
+          className="flex items-center justify-center bg-white/90 hover:bg-white dark:bg-gray-700/90 dark:hover:bg-gray-700 border-2 border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500 text-gray-900 dark:text-white px-8 py-4 text-lg font-semibold shadow-xl transform hover:scale-105 transition-all"
         >
           <RotateCcw className="mr-3 h-5 w-5" />
           {t('다시 테스트하기', 'Retake Test')}
@@ -301,58 +349,49 @@ export function ResultScreen() {
                     const shareText = `나는 ${title}!\n\n테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n\n${typeData.description}\n\n나의 테토-에겐 성격 유형 테스트 결과를 확인해보세요!`;
                     const url = window.location.href;
                     const imageUrl = typeData.shareImage || typeData.image;
-                    
+
                     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                    
+
+                    // Create formatted share text with clear structure
+                    const formattedShareText = `[ 나는 ${title}! ]\n- 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n- ${typeData.description}\n\n[여러분도 나의 성향을 테스트해보세요]\n${url}`;
+
                     if (isMobile) {
-                      // KakaoTalk sharing with proper parameters
-                      const kakaoParams = new URLSearchParams({
-                        title: title,
-                        description: shareText,
-                        imageUrl: imageUrl,
-                        link: url,
-                        buttonTitle: '테스트 해보기'
-                      });
-                      
-                      // Try KakaoTalk app scheme first
-                      const kakaoUrl = `kakaotalk://share?${kakaoParams.toString()}`;
-                      
-                      // Fallback to web sharing
-                      const fallbackShare = () => {
-                        if (navigator.share) {
-                          navigator.share({
-                            title: title,
-                            text: shareText,
-                            url: url
-                          }).catch(() => {
-                            navigator.clipboard.writeText(`${shareText}\n\n${url}`).then(() => {
-                              alert('공유 내용이 복사되었습니다!');
-                            });
-                          });
-                        } else {
-                          navigator.clipboard.writeText(`${shareText}\n\n${url}`).then(() => {
-                            alert('공유 내용이 복사되었습니다!');
-                          });
-                        }
-                      };
-                      
-                      // Try to open KakaoTalk, fallback to web sharing
-                      try {
-                        window.location.href = kakaoUrl;
-                        // Set a timeout to fallback if KakaoTalk doesn't open
-                        setTimeout(fallbackShare, 2000);
-                      } catch (error) {
-                        fallbackShare();
-                      }
-                    } else {
+                      // For mobile, try native sharing first
                       if (navigator.share) {
                         navigator.share({
                           title: title,
-                          text: shareText,
+                          text: formattedShareText,
                           url: url
-                        }).catch(console.error);
+                        }).catch(() => {
+                          // If native sharing fails, copy to clipboard
+                          navigator.clipboard.writeText(formattedShareText).then(() => {
+                            alert('공유 내용이 복사되었습니다!');
+                          }).catch(() => {
+                            alert('공유에 실패했습니다. 링크를 수동으로 복사해주세요.');
+                          });
+                        });
                       } else {
-                        navigator.clipboard.writeText(`${shareText}\n\n${url}`).then(() => {
+                        // Fallback to clipboard
+                        navigator.clipboard.writeText(formattedShareText).then(() => {
+                          alert('공유 내용이 복사되었습니다!');
+                        }).catch(() => {
+                          alert('공유에 실패했습니다. 링크를 수동으로 복사해주세요.');
+                        });
+                      }
+                    } else {
+                      // Desktop behavior
+                      if (navigator.share) {
+                        navigator.share({
+                          title: title,
+                          text: formattedShareText,
+                          url: url
+                        }).catch(() => {
+                          navigator.clipboard.writeText(formattedShareText).then(() => {
+                            alert('카카오톡 공유 내용이 복사되었습니다!');
+                          });
+                        });
+                      } else {
+                        navigator.clipboard.writeText(formattedShareText).then(() => {
                           alert('카카오톡 공유 내용이 복사되었습니다!');
                         });
                       }
@@ -367,8 +406,8 @@ export function ResultScreen() {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 text-lg shadow-lg transform hover:scale-105 transition-all"
                   onClick={() => {
                     const title = `${getIntensityLabel(testResults.intensity, language)} ${typeData.title}`;
-                    const shareText = `나는 ${title}!\n\n테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n\n${typeData.description}\n\n나의 테토-에겐 성격 유형 테스트 결과를 확인해보세요!`;
-                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(shareText)}`;
+                    const formattedShareText = `[ 나는 ${title}! ]\n- 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n- ${typeData.description}\n\n[여러분도 나의 성향을 테스트해보세요]\n${window.location.href}`;
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(formattedShareText)}`;
                     window.open(shareUrl, '_blank');
                     setShowShareModal(false);
                   }}
@@ -379,8 +418,8 @@ export function ResultScreen() {
                   className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-4 text-lg shadow-lg transform hover:scale-105 transition-all"
                   onClick={() => {
                     const title = `${getIntensityLabel(testResults.intensity, language)} ${typeData.title}`;
-                    const shareText = `나는 ${title}!\n\n테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n\n${typeData.description}\n\n#테토에겐테스트 #성격유형테스트`;
-                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+                    const formattedShareText = `[ 나는 ${title}! ]\n- 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n- ${typeData.description}\n\n[여러분도 나의 성향을 테스트해보세요]\n#테토에겐테스트 #성격유형테스트\n${window.location.href}`;
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(formattedShareText)}`, '_blank');
                     setShowShareModal(false);
                   }}
                 >
@@ -390,8 +429,9 @@ export function ResultScreen() {
                   variant="secondary"
                   className="w-full py-4 text-lg font-bold shadow-lg transform hover:scale-105 transition-all"
                   onClick={() => {
-                    const shareText = `나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}!\n\n테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n\n${typeData.description}\n\n나의 테토-에겐 성격 유형 테스트 결과!\n${window.location.href}`;
-                    navigator.clipboard.writeText(shareText);
+                    const title = `${getIntensityLabel(testResults.intensity, language)} ${typeData.title}`;
+                    const formattedShareText = `[ 나는 ${title}! ]\n- 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%\n- ${typeData.description}\n\n[여러분도 나의 성향을 테스트해보세요]\n${window.location.href}`;
+                    navigator.clipboard.writeText(formattedShareText);
                     alert(t('상세한 테스트 결과와 링크가 복사되었습니다!', 'Detailed test result and link copied!'));
                     setShowShareModal(false);
                   }}
@@ -403,9 +443,9 @@ export function ResultScreen() {
           </Card>
         </div>
       )}
-      
+
       {/* Developer Credit */}
-      <div className="text-center mt-12 mb-8">
+      <div className="text-center mt-16 mb-8">
         <p className="text-sm text-gray-400 dark:text-gray-600 font-light">
           developed by Dunkin
         </p>
