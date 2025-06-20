@@ -119,49 +119,64 @@ export function ResultScreen() {
     const tetoPercentage = testResults.tetoPercentage;
     const estrogenPercentage = testResults.estrogenPercentage;
     const gender = testResults.gender;
+    const type = testResults.type;
 
-    // For males, recommend females; for females, recommend males
-    if (gender === 'male') {
+    // 에겐남 -> 테토녀, 테토남 -> 에겐녀, 에겐녀 -> 에겐남, 테토녀 -> 테토남
+    if (type === 'estrogen-male') {
+      // 에겐남은 테토녀에게 매력을 느낌
+      if (tetoPercentage > 80) {
+        return t('초강력 테토녀', 'Super Teto Woman');
+      } else if (tetoPercentage > 60) {
+        return t('강력 테토녀', 'Strong Teto Woman');
+      } else {
+        return t('테토녀', 'Teto Woman');
+      }
+    } else if (type === 'teto-male') {
+      // 테토남은 에겐녀에게 매력을 느낌
       if (estrogenPercentage > 80) {
         return t('초강력 에겐녀', 'Super Estrogen Woman');
       } else if (estrogenPercentage > 60) {
         return t('강력 에겐녀', 'Strong Estrogen Woman');
-      } else if (tetoPercentage > 60) {
-        return t('테토녀', 'Teto Woman');
       } else {
         return t('에겐녀', 'Estrogen Woman');
       }
-    } else {
+    } else if (type === 'estrogen-female') {
+      // 에겐녀는 에겐남에게 매력을 느낌
+      if (estrogenPercentage > 80) {
+        return t('초강력 에겐남', 'Super Estrogen Man');
+      } else if (estrogenPercentage > 60) {
+        return t('강력 에겐남', 'Strong Estrogen Man');
+      } else {
+        return t('에겐남', 'Estrogen Man');
+      }
+    } else if (type === 'teto-female') {
+      // 테토녀는 테토남에게 매력을 느낌
       if (tetoPercentage > 80) {
         return t('초강력 테토남', 'Super Teto Man');
       } else if (tetoPercentage > 60) {
         return t('강력 테토남', 'Strong Teto Man');
-      } else if (estrogenPercentage > 60) {
-        return t('에겐남', 'Estrogen Man');
       } else {
         return t('테토남', 'Teto Man');
       }
     }
+    
+    return t('균형잡힌 상대', 'Balanced Partner');
   };
 
   const getCompatibleMatchReason = (testResults: any, language: string) => {
-    const tetoPercentage = testResults.tetoPercentage;
-    const estrogenPercentage = testResults.estrogenPercentage;
-    const gender = testResults.gender;
+    const type = testResults.type;
 
-    if (gender === 'male') {
-      if (estrogenPercentage > 60) {
-        return t('당신은 에겐 성향이 강해, 감성적이고 공감 능력이 뛰어난 여성과 잘 어울립니다.', 'You have a strong Estrogen tendency, so you get along well with emotional and empathetic women.');
-      } else {
-        return t('당신은 테토 성향이 강해, 활동적이고 에너지가 넘치는 여성과 잘 어울립니다.', 'You have a strong Teto tendency, so you get along well with active and energetic women.');
-      }
-    } else {
-      if (tetoPercentage > 60) {
-        return t('당신은 테토 성향이 강해, 리더십 있고 강인한 남성과 잘 어울립니다.', 'You have a strong Teto tendency, so you get along well with leadership and strong men.');
-      } else {
-        return t('당신은 에겐 성향이 강해, 감성적이고 배려심 있는 남성과 잘 어울립니다.', 'You have a strong Estrogen tendency, so you get along well with emotional and caring men.');
-      }
+    if (type === 'estrogen-male') {
+      return t('에겐남인 당신은 자신에게 부족한 추진력과 에너지를 지닌 테토녀에게 매력을 느낍니다. 테토녀의 활동적이고 주도적인 성향이 당신의 섬세함과 잘 조화를 이룹니다.', 'As an Estrogen Male, you are attracted to Teto Women who have the drive and energy you lack. The active and leading nature of Teto Women harmonizes well with your sensitivity.');
+    } else if (type === 'teto-male') {
+      return t('테토남인 당신은 자신에게 없는 부드러운 여성성과 섬세한 감수성을 지닌 에겐녀에게 호감을 느낍니다. 에겐녀의 감성적인 면이 당신의 강인함을 부드럽게 만들어줍니다.', 'As a Teto Male, you are attracted to Estrogen Women who have the soft femininity and delicate sensitivity you lack. The emotional side of Estrogen Women softens your strength.');
+    } else if (type === 'estrogen-female') {
+      return t('에겐녀인 당신은 자신의 감수성과 정서를 잘 이해해주는 에겐남에게 끌리는 경향이 있습니다. 서로의 섬세한 감정을 공유하며 깊은 유대감을 형성할 수 있습니다.', 'As an Estrogen Woman, you tend to be attracted to Estrogen Men who understand your sensitivity and emotions well. You can share delicate feelings and form deep bonds with each other.');
+    } else if (type === 'teto-female') {
+      return t('테토녀인 당신은 자신보다 더 강한 양기와 남성적인 매력을 가진 테토남에게 자연스럽게 끌립니다. 서로의 강한 에너지가 시너지를 만들어 역동적인 관계를 형성합니다.', 'As a Teto Woman, you are naturally attracted to Teto Men who have stronger masculine energy and charm than you. Your strong energies create synergy and form a dynamic relationship.');
     }
+    
+    return t('서로 보완적인 관계를 형성할 수 있습니다.', 'You can form complementary relationships with each other.');
   };
 
   return (
