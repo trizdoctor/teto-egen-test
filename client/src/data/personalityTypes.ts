@@ -1,3 +1,4 @@
+
 export const personalityTypes = {
   ko: {
     'teto-male': {
@@ -16,8 +17,10 @@ export const personalityTypes = {
       ],
       compatibleType: '에겐녀',
       compatibleDescription: '감수성이 풍부하고 세심한 배려심을 가진 상대와 잘 어울립니다.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'estrogen-male': {
       title: '에겐남',
@@ -35,8 +38,10 @@ export const personalityTypes = {
       ],
       compatibleType: '테토녀',
       compatibleDescription: '강한 추진력과 에너지를 가진 상대와 잘 어울립니다.',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1494790108755-2616b612b647?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'teto-female': {
       title: '테토녀',
@@ -54,8 +59,10 @@ export const personalityTypes = {
       ],
       compatibleType: '테토남',
       compatibleDescription: '더 강한 양기와 남성적 매력을 가진 상대와 잘 어울립니다.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b647?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'estrogen-female': {
       title: '에겐녀',
@@ -73,8 +80,10 @@ export const personalityTypes = {
       ],
       compatibleType: '에겐남',
       compatibleDescription: '자신의 감수성과 정서를 잘 이해해주는 상대와 잘 어울립니다.',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     }
   },
   en: {
@@ -94,8 +103,10 @@ export const personalityTypes = {
       ],
       compatibleType: 'Estrogen Female',
       compatibleDescription: 'Compatible with partners who have rich sensitivity and thoughtful care.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'estrogen-male': {
       title: 'Estrogen Male',
@@ -113,8 +124,10 @@ export const personalityTypes = {
       ],
       compatibleType: 'Teto Female',
       compatibleDescription: 'Compatible with partners who have strong drive and energy.',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1494790108755-2616b612b647?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'teto-female': {
       title: 'Teto Female',
@@ -132,8 +145,10 @@ export const personalityTypes = {
       ],
       compatibleType: 'Teto Male',
       compatibleDescription: 'Compatible with partners who have stronger masculine energy and charm.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b647?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     },
     'estrogen-female': {
       title: 'Estrogen Female',
@@ -151,8 +166,10 @@ export const personalityTypes = {
       ],
       compatibleType: 'Estrogen Male',
       compatibleDescription: 'Compatible with partners who understand your sensitivity and emotions well.',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300',
-      compatibleImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+      image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      compatibleImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80',
+      backgroundImage: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80',
+      shareImage: 'https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80'
     }
   }
 };

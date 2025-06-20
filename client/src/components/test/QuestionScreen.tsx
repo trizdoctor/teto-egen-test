@@ -1,10 +1,11 @@
+import { useEffect, useState } from 'react';
 import { useTest } from '@/contexts/TestContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, shuffleArray } from '@/lib/utils';
 
 export function QuestionScreen() {
   const {
@@ -14,12 +15,30 @@ export function QuestionScreen() {
     setAnswer,
     nextQuestion,
     previousQuestion,
+    updateQuestionsLanguage,
   } = useTest();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const [shuffledOptions, setShuffledOptions] = useState<any[]>([]);
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
   const currentAnswer = answers[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+
+  // Update questions when language changes
+  useEffect(() => {
+    updateQuestionsLanguage(language);
+  }, [language, updateQuestionsLanguage]);
+
+  // Shuffle options when question changes
+  useEffect(() => {
+    if (currentQuestion?.options) {
+      const optionsWithIndex = currentQuestion.options.map((option: any, index: number) => ({
+        ...option,
+        originalIndex: index
+      }));
+      setShuffledOptions(shuffleArray(optionsWithIndex));
+    }
+  }, [currentQuestion]);
 
   if (!currentQuestion) {
     return (
@@ -31,8 +50,8 @@ export function QuestionScreen() {
     );
   }
 
-  const handleOptionSelect = (optionIndex: number) => {
-    setAnswer(currentQuestionIndex, optionIndex);
+  const handleOptionSelect = (originalIndex: number) => {
+    setAnswer(currentQuestionIndex, originalIndex);
   };
 
   return (
@@ -56,17 +75,17 @@ export function QuestionScreen() {
           </h3>
 
           <div className="space-y-4">
-            {currentQuestion.options.map((option: any, index: number) => (
+            {shuffledOptions.map((option: any, shuffledIndex: number) => (
               <Button
-                key={index}
+                key={shuffledIndex}
                 variant="outline"
                 className={cn(
                   "w-full text-left p-4 h-auto whitespace-normal justify-start transition-colors",
-                  currentAnswer === index
+                  currentAnswer === option.originalIndex
                     ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                     : "border-gray-200 dark:border-gray-600 hover:border-blue-500"
                 )}
-                onClick={() => handleOptionSelect(index)}
+                onClick={() => handleOptionSelect(option.originalIndex)}
               >
                 {option.text}
               </Button>

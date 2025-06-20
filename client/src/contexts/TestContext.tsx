@@ -10,6 +10,7 @@ interface TestResults {
   tetoPercentage: number;
   estrogenPercentage: number;
   gender: Gender;
+  intensity: string;
 }
 
 interface TestContextType {
@@ -19,9 +20,11 @@ interface TestContextType {
   answers: (number | null)[];
   shuffledQuestions: any[];
   testResults: TestResults | null;
+  currentLanguage: 'ko' | 'en';
   setCurrentScreen: (screen: Screen) => void;
   setSelectedGender: (gender: Gender) => void;
   initializeQuestions: (language: 'ko' | 'en') => void;
+  updateQuestionsLanguage: (language: 'ko' | 'en') => void;
   setAnswer: (index: number, answer: number) => void;
   nextQuestion: () => void;
   previousQuestion: () => void;
@@ -39,6 +42,7 @@ export function TestProvider({ children }: { children: React.ReactNode }) {
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([]);
   const [testResults, setTestResults] = useState<TestResults | null>(null);
+  const [currentLanguage, setCurrentLanguage] = useState<'ko' | 'en'>('ko');
 
   const initializeQuestions = (language: 'ko' | 'en') => {
     const questions = questionBank[language] || questionBank.ko;
@@ -46,6 +50,17 @@ export function TestProvider({ children }: { children: React.ReactNode }) {
     setShuffledQuestions(shuffled);
     setAnswers(new Array(shuffled.length).fill(null));
     setCurrentQuestionIndex(0);
+    setCurrentLanguage(language);
+  };
+
+  const updateQuestionsLanguage = (language: 'ko' | 'en') => {
+    if (shuffledQuestions.length > 0) {
+      const questions = questionBank[language] || questionBank.ko;
+      // Maintain the same order by mapping existing questions to new language
+      const updatedQuestions = shuffledQuestions.map((_, index) => questions[index % questions.length]);
+      setShuffledQuestions(updatedQuestions);
+      setCurrentLanguage(language);
+    }
   };
 
   const setAnswer = (index: number, answer: number) => {
@@ -86,9 +101,11 @@ export function TestProvider({ children }: { children: React.ReactNode }) {
         answers,
         shuffledQuestions,
         testResults,
+        currentLanguage,
         setCurrentScreen,
         setSelectedGender,
         initializeQuestions,
+        updateQuestionsLanguage,
         setAnswer,
         nextQuestion,
         previousQuestion,
