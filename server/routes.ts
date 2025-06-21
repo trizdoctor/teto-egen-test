@@ -10,37 +10,69 @@ const sharePages = new Map<string, any>();
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create share page
   app.post("/api/share", (req, res) => {
+    console.log("=== SHARE API DEBUG ===");
+    console.log("Request headers:", req.headers);
+    console.log("Request body:", req.body);
+    console.log("Request origin:", req.get('origin'));
+    console.log("Request host:", req.get('host'));
+    
     const { type, intensity, tetoPercentage, estrogenPercentage } = req.body;
 
     // Generate short random ID
     const shareId = Math.random().toString(36).substring(2, 8);
+    
+    console.log("Generated shareId:", shareId);
 
     // Store the share data
-    sharePages.set(shareId, {
+    const shareData = {
       type,
       intensity,
       tetoPercentage,
       estrogenPercentage,
       createdAt: Date.now(),
-    });
+    };
+    
+    sharePages.set(shareId, shareData);
+    console.log("Stored share data:", shareData);
+    console.log("Current sharePages size:", sharePages.size);
+    
+    const response = { shareId };
+    console.log("Sending response:", response);
+    console.log("=== END SHARE API DEBUG ===");
 
-    res.json({ shareId });
+    res.json(response);
   });
 
   // Serve share page
   app.get("/s/:shareId*", (req, res) => {
+    console.log("=== SHARE PAGE DEBUG ===");
+    console.log("Request URL:", req.url);
+    console.log("Request params:", req.params);
+    console.log("Request headers:", req.headers);
+    
     // Extract shareId from the beginning of the path, ignoring the random suffix
     const fullPath = req.params.shareId + (req.params[0] || "");
     const shareId = fullPath.substring(0, 6); // Original shareId is always 6 characters
+    
+    console.log("Full path:", fullPath);
+    console.log("Extracted shareId:", shareId);
+    console.log("Available shareIds:", Array.from(sharePages.keys()));
+    
     const shareData = sharePages.get(shareId);
+    console.log("Found share data:", shareData);
 
     if (!shareData) {
+      console.log("Share data not found, redirecting to /");
+      console.log("=== END SHARE PAGE DEBUG ===");
       // Redirect to main page if share not found
       return res.redirect("/");
     }
 
+    console.log("Generating HTML for share data");
     // Generate HTML with proper meta tags
     const html = generateShareHTML(shareData, shareId);
+    console.log("Generated HTML length:", html.length);
+    console.log("=== END SHARE PAGE DEBUG ===");
     res.send(html);
   });
 

@@ -18,10 +18,40 @@ export function ResultScreen() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
 
+  // Debug environment information
+  useEffect(() => {
+    console.log("=== ENVIRONMENT DEBUG ===");
+    console.log("User Agent:", navigator.userAgent);
+    console.log("Platform:", navigator.platform);
+    console.log("Online:", navigator.onLine);
+    console.log("Cookie enabled:", navigator.cookieEnabled);
+    console.log("Language:", navigator.language);
+    console.log("Languages:", navigator.languages);
+    console.log("Referrer:", document.referrer);
+    console.log("Document URL:", document.URL);
+    console.log("Base URI:", document.baseURI);
+    console.log("Document domain:", document.domain);
+    console.log("Document location:", document.location);
+    console.log("=== END ENVIRONMENT DEBUG ===");
+  }, []);
+
   // Generate share page when test results are available
   useEffect(() => {
     if (testResults) {
+      console.log("=== CLIENT SHARE DEBUG ===");
       console.log("Test completed. Results:", testResults);
+      console.log("Current window.location:", window.location);
+      console.log("Current window.location.origin:", window.location.origin);
+      console.log("Current window.location.href:", window.location.href);
+
+      const requestData = {
+        type: testResults.type,
+        intensity: testResults.intensity,
+        tetoPercentage: testResults.tetoPercentage,
+        estrogenPercentage: testResults.estrogenPercentage
+      };
+      
+      console.log("Sending request data:", requestData);
 
       // Create share page on backend
       fetch('/api/share', {
@@ -29,24 +59,33 @@ export function ResultScreen() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          type: testResults.type,
-          intensity: testResults.intensity,
-          tetoPercentage: testResults.tetoPercentage,
-          estrogenPercentage: testResults.estrogenPercentage
-        })
+        body: JSON.stringify(requestData)
       })
-      .then(response => response.json())
+      .then(response => {
+        console.log("Response status:", response.status);
+        console.log("Response headers:", response.headers);
+        console.log("Response ok:", response.ok);
+        return response.json();
+      })
       .then(data => {
+        console.log("Received response data:", data);
         const baseUrl = window.location.origin;
+        console.log("Using baseUrl:", baseUrl);
         const newShareUrl = `${baseUrl}/s/${data.shareId}`;
+        console.log("Generated newShareUrl:", newShareUrl);
         setShareUrl(newShareUrl);
-        console.log("Share page created:", newShareUrl);
+        console.log("Share page created successfully:", newShareUrl);
+        console.log("=== END CLIENT SHARE DEBUG ===");
       })
       .catch(error => {
-        console.error('Error creating share page:', error);
+        console.error('=== ERROR CREATING SHARE PAGE ===');
+        console.error('Error details:', error);
+        console.error('Error stack:', error.stack);
         // Fallback to current URL
-        setShareUrl(window.location.href);
+        const fallbackUrl = window.location.href;
+        console.log("Using fallback URL:", fallbackUrl);
+        setShareUrl(fallbackUrl);
+        console.log("=== END ERROR DEBUG ===");
       });
     }
   }, [testResults]);
@@ -264,6 +303,11 @@ export function ResultScreen() {
                 <Button
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={() => {
+                    console.log("=== SHARE BUTTON DEBUG ===");
+                    console.log("Current shareUrl:", shareUrl);
+                    console.log("testResults:", testResults);
+                    console.log("typeData:", typeData);
+                    
                     const shareText = language === 'ko' 
                       ? `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%
@@ -278,18 +322,29 @@ ${shareUrl}`
 [Take the personality test yourself]
 ${shareUrl}`;
 
+                    console.log("Generated share text:", shareText);
+                    console.log("Navigator.share available:", !!navigator.share);
+
                     if (navigator.share) {
+                      console.log("Using native share API");
                       navigator.share({
                         title: language === 'ko' ? '테토-에겐 성격 유형 테스트' : 'Teto-Estrogen Personality Test',
                         text: shareText
-                      }).catch(console.error);
+                      }).catch((error) => {
+                        console.error("Native share failed:", error);
+                      });
                     } else {
+                      console.log("Using clipboard API");
                       navigator.clipboard.writeText(shareText).then(() => {
+                        console.log("Clipboard write successful");
                         alert(t('공유 내용이 복사되었습니다! 카카오톡에 붙여넣기 해주세요.', 'Share content copied! Please paste it in KakaoTalk.'));
-                      }).catch(() => {
+                      }).catch((clipboardError) => {
+                        console.error("Clipboard write failed:", clipboardError);
+                        console.log("Falling back to Kakao Story");
                         window.open(`https://story.kakao.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
                       });
                     }
+                    console.log("=== END SHARE BUTTON DEBUG ===");
                     setShowShareModal(false);
                   }}
                 >
