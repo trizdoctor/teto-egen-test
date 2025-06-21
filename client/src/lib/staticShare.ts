@@ -37,10 +37,20 @@ export function getStaticShareUrl(type: string, intensity: string, gender: strin
   const key = `${type}-${intensity}-${gender}`;
   const code = staticShareMapping[key];
   
+  console.log(`=== STATIC SHARE DEBUG ===`);
+  console.log(`Input: type=${type}, intensity=${intensity}, gender=${gender}`);
+  console.log(`Generated key: ${key}`);
+  console.log(`Found code: ${code}`);
+  console.log(`Available mappings:`, Object.keys(staticShareMapping));
+  console.log(`=== END STATIC SHARE DEBUG ===`);
+  
   if (!code) {
-    console.warn(`No static share URL found for ${key}`);
+    console.warn(`No static share URL found for key: ${key}`);
+    console.warn(`Available keys:`, Object.keys(staticShareMapping));
     return '/';
   }
   
-  return `/s/${code}.html`;
+  const finalUrl = `/s/${code}.html`;
+  console.log(`Final static share URL: ${finalUrl}`);
+  return finalUrl;
 }

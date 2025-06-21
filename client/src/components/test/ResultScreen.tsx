@@ -21,9 +21,21 @@ export function ResultScreen() {
   // Generate static share URL when test results are available
   useEffect(() => {
     if (testResults) {
-      const staticSharePath = getStaticShareUrl(testResults.type, testResults.intensity, testResults.gender);
+      console.log("=== RESULT SCREEN DEBUG ===");
+      console.log("testResults:", testResults);
+      console.log("type:", testResults.type);
+      console.log("intensity:", testResults.intensity);  
+      console.log("gender:", testResults.gender);
+      
+      // Parse type to extract personality type only (remove gender)
+      const personalityType = testResults.type.includes('teto') ? 'teto' : 'estrogen';
+      console.log("Parsed personality type:", personalityType);
+      console.log("=== END RESULT SCREEN DEBUG ===");
+      
+      const staticSharePath = getStaticShareUrl(personalityType, testResults.intensity, testResults.gender);
       const fullShareUrl = `${window.location.origin}${staticSharePath}`;
       setShareUrl(fullShareUrl);
+      console.log("Final static share URL:", fullShareUrl);
     }
   }, [testResults]);
 
@@ -243,13 +255,17 @@ export function ResultScreen() {
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={() => {
                     const shareText = language === 'ko' 
-                      ? `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+                      ? `테토-에겐 성격 유형 테스트
+
+[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%
 - ${typeData.description}
 
 [여러분도 나의 성향을 테스트해보세요]
 ${shareUrl}`
-                      : `[ I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+                      : `Teto-Estrogen Personality Test
+
+[ I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - Teto Tendency ${testResults.tetoPercentage}%, Estrogen Tendency ${testResults.estrogenPercentage}%
 - ${typeData.description}
 
