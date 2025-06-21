@@ -27,7 +27,7 @@ export function QuestionScreen() {
   // Update questions when language changes
   useEffect(() => {
     updateQuestionsLanguage(language);
-  }, [language, updateQuestionsLanguage]);
+  }, [language]);
 
   // Shuffle options when question changes
   useEffect(() => {

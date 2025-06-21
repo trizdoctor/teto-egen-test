@@ -124,108 +124,46 @@ export function ResultScreen() {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
             {t('성향 분석', 'Tendency Analysis')}
           </h3>
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            {/* Circular Chart */}
-            <div className="w-full lg:w-1/2 h-80">
-              <ChartContainer
-                config={{
-                  teto: {
-                    label: t('테토 성향', 'Teto Tendency'),
-                    color: '#3B82F6'
-                  },
-                  estrogen: {
-                    label: t('에겐 성향', 'Estrogen Tendency'),
-                    color: '#EF4444'
-                  }
-                }}
-                className="h-full"
-              >
-                <PieChart>
-                  <Pie
-                    data={[
-                      {
-                        name: t('테토 성향', 'Teto Tendency'),
-                        value: testResults.tetoPercentage,
-                        fill: '#3B82F6'
-                      },
-                      {
-                        name: t('에겐 성향', 'Estrogen Tendency'),
-                        value: testResults.estrogenPercentage,
-                        fill: '#EF4444'
-                      }
-                    ]}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={120}
-                    paddingAngle={5}
-                    dataKey="value"
-                    strokeWidth={2}
-                    stroke="#fff"
-                  >
-                    <Cell fill="#3B82F6" />
-                    <Cell fill="#EF4444" />
-                  </Pie>
-                  <ChartTooltip 
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0];
-                        return (
-                          <div className="bg-white dark:bg-gray-800 p-3 border rounded-lg shadow-lg">
-                            <p className="font-semibold text-gray-900 dark:text-white">
-                              {data.name}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {data.value}%
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                </PieChart>
-              </ChartContainer>
-            </div>
-
-            {/* Legend and Details */}
-            <div className="w-full lg:w-1/2 space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
                     <span className="font-medium text-gray-900 dark:text-white">
                       {t('테토 성향', 'Teto Tendency')}
                     </span>
                   </div>
-                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
                     {testResults.tetoPercentage}%
                   </span>
                 </div>
+                <Progress value={testResults.tetoPercentage} className="h-3 bg-gray-200 dark:bg-gray-700">
+                  <div 
+                    className="h-full bg-blue-500 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${testResults.tetoPercentage}%` }}
+                  />
+                </Progress>
+              </div>
 
-                <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-red-500 rounded-full"></div>
                     <span className="font-medium text-gray-900 dark:text-white">
                       {t('에겐 성향', 'Estrogen Tendency')}
                     </span>
                   </div>
-                  <span className="text-2xl font-bold text-red-600 dark:text-red-400">
+                  <span className="text-xl font-bold text-red-600 dark:text-red-400">
                     {testResults.estrogenPercentage}%
                   </span>
                 </div>
-              </div>
-
-              <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  {t('주요 성향', 'Dominant Tendency')}
-                </p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">
-                  {testResults.tetoPercentage > testResults.estrogenPercentage 
-                    ? t('테토 성향', 'Teto Tendency')
-                    : t('에겐 성향', 'Estrogen Tendency')
-                  }
-                </p>
+                <Progress value={testResults.estrogenPercentage} className="h-3 bg-gray-200 dark:bg-gray-700">
+                  <div 
+                    className="h-full bg-red-500 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${testResults.estrogenPercentage}%` }}
+                  />
+                </Progress>
               </div>
             </div>
           </div>
@@ -326,16 +264,23 @@ export function ResultScreen() {
                 <Button
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={() => {
-                    const shareText = `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+                    const shareText = language === 'ko' 
+                      ? `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%
 - ${typeData.description}
 
 [여러분도 나의 성향을 테스트해보세요]
+${shareUrl}`
+                      : `[ I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+- Teto Tendency ${testResults.tetoPercentage}%, Estrogen Tendency ${testResults.estrogenPercentage}%
+- ${typeData.description}
+
+[Take the personality test yourself]
 ${shareUrl}`;
 
                     if (navigator.share) {
                       navigator.share({
-                        title: '테토-에겐 성격 유형 테스트',
+                        title: language === 'ko' ? '테토-에겐 성격 유형 테스트' : 'Teto-Estrogen Personality Test',
                         text: shareText
                       }).catch(console.error);
                     } else {
@@ -363,7 +308,9 @@ ${shareUrl}`;
                 <Button
                   className="w-full bg-blue-400 hover:bg-blue-500"
                   onClick={() => {
-                    const shareText = `나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! - 테토-에겐 성격 유형 테스트`;
+                    const shareText = language === 'ko' 
+                      ? `나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! - 테토-에겐 성격 유형 테스트`
+                      : `I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! - Teto-Estrogen Personality Test`;
                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
                     setShowShareModal(false);
                   }}

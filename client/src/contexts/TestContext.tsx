@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import { shuffleArray } from '@/lib/utils';
 import { questionBank } from '@/data/questions';
 
@@ -53,15 +53,15 @@ export function TestProvider({ children }: { children: React.ReactNode }) {
     setCurrentLanguage(language);
   };
 
-  const updateQuestionsLanguage = (language: 'ko' | 'en') => {
-    if (shuffledQuestions.length > 0) {
+  const updateQuestionsLanguage = useCallback((language: 'ko' | 'en') => {
+    if (shuffledQuestions.length > 0 && currentLanguage !== language) {
       const questions = questionBank[language] || questionBank.ko;
       // Maintain the same order by mapping existing questions to new language
       const updatedQuestions = shuffledQuestions.map((_, index) => questions[index % questions.length]);
       setShuffledQuestions(updatedQuestions);
       setCurrentLanguage(language);
     }
-  };
+  }, [shuffledQuestions, currentLanguage]);
 
   const setAnswer = (index: number, answer: number) => {
     const newAnswers = [...answers];
