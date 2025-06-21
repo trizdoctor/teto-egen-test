@@ -72,7 +72,7 @@ export function QuestionScreen() {
         <Progress value={progress} className="h-2" />
       </div>
 
-      <Card className="bg-white dark:bg-gray-800 shadow-lg w-full max-w-2xl mx-auto">
+      <Card className="bg-white dark:bg-gray-800 shadow-lg mb-8">
         <CardContent className="p-8">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-8 leading-relaxed">
             {currentQuestion.question}
@@ -108,7 +108,7 @@ export function QuestionScreen() {
           <ChevronLeft className="mr-2 h-4 w-4" />
           {t('이전', 'Previous')}
         </Button>
-
+        
         <Button
           onClick={nextQuestion}
           disabled={currentAnswer === null}

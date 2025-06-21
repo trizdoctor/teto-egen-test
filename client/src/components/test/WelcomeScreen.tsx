@@ -62,7 +62,7 @@ export function WelcomeScreen() {
               </p>
             </CardContent>
           </Card>
-
+          
           <Card className="bg-white dark:bg-gray-800 shadow-lg">
             <CardContent className="p-6">
               <div className="w-16 h-16 bg-gradient-to-br from-estrogen to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">

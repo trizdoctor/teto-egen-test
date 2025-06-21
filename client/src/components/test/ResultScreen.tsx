@@ -4,7 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { personalityTypes } from '@/data/personalityTypes';
 import { getIntensityLabel, getIntensityColor } from '@/lib/intensityLabels';
 import { getPersonalizedMessage } from '@/lib/personalizedMessages';
-import { generateRandomString } from '@/lib/utils';
+import { getStaticShareUrl } from '@/lib/staticShare';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -18,54 +18,12 @@ export function ResultScreen() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
 
-  // Generate share page when test results are available
+  // Generate static share URL when test results are available
   useEffect(() => {
     if (testResults) {
-      const requestData = {
-        type: testResults.type,
-        intensity: testResults.intensity,
-        tetoPercentage: testResults.tetoPercentage,
-        estrogenPercentage: testResults.estrogenPercentage
-      };
-
-      // Create share page on backend
-      fetch('/api/share', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Check if response has content
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('Invalid response format');
-        }
-        
-        return response.json();
-      })
-      .then(data => {
-        const baseUrl = window.location.origin;
-        
-        if (data && data.shareId) {
-          const newShareUrl = `${baseUrl}/s/${data.shareId}`;
-          setShareUrl(newShareUrl);
-        } else {
-          console.error("No shareId in response:", data);
-          // Fallback to current URL
-          setShareUrl(window.location.href);
-        }
-      })
-      .catch(error => {
-        console.error('Error creating share page:', error);
-        // Fallback to current URL
-        setShareUrl(window.location.href);
-      });
+      const staticSharePath = getStaticShareUrl(testResults.type, testResults.intensity, testResults.gender);
+      const fullShareUrl = `${window.location.origin}${staticSharePath}`;
+      setShareUrl(fullShareUrl);
     }
   }, [testResults]);
 
