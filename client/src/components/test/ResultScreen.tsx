@@ -44,6 +44,10 @@ export function ResultScreen() {
       console.log("Current window.location.origin:", window.location.origin);
       console.log("Current window.location.href:", window.location.href);
 
+      // Update debug status
+      const statusElement = document.getElementById('api-status');
+      if (statusElement) statusElement.textContent = '📡 API 요청 시작...';
+
       const requestData = {
         type: testResults.type,
         intensity: testResults.intensity,
@@ -65,22 +69,35 @@ export function ResultScreen() {
         console.log("Response status:", response.status);
         console.log("Response headers:", response.headers);
         console.log("Response ok:", response.ok);
+        
+        if (statusElement) statusElement.textContent = `📥 응답 받음 (${response.status})`;
+        
         return response.json();
       })
       .then(data => {
         console.log("Received response data:", data);
         const baseUrl = window.location.origin;
         console.log("Using baseUrl:", baseUrl);
-        const newShareUrl = `${baseUrl}/s/${data.shareId}`;
-        console.log("Generated newShareUrl:", newShareUrl);
-        setShareUrl(newShareUrl);
-        console.log("Share page created successfully:", newShareUrl);
+        
+        if (data.shareId) {
+          const newShareUrl = `${baseUrl}/s/${data.shareId}`;
+          console.log("Generated newShareUrl:", newShareUrl);
+          setShareUrl(newShareUrl);
+          if (statusElement) statusElement.textContent = `✅ 성공: ${data.shareId}`;
+          console.log("Share page created successfully:", newShareUrl);
+        } else {
+          if (statusElement) statusElement.textContent = '❌ shareId 없음';
+          console.error("No shareId in response:", data);
+        }
         console.log("=== END CLIENT SHARE DEBUG ===");
       })
       .catch(error => {
         console.error('=== ERROR CREATING SHARE PAGE ===');
         console.error('Error details:', error);
         console.error('Error stack:', error.stack);
+        
+        if (statusElement) statusElement.textContent = `❌ 오류: ${error.message}`;
+        
         // Fallback to current URL
         const fallbackUrl = window.location.href;
         console.log("Using fallback URL:", fallbackUrl);
@@ -282,6 +299,49 @@ export function ResultScreen() {
           {t('다시 테스트하기', 'Retake Test')}
         </Button>
       </div>
+
+      {/* Debug Log Display */}
+      <Card className="bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-700 mt-8">
+        <CardContent className="p-4">
+          <h4 className="text-sm font-semibold text-red-800 dark:text-red-200 mb-3">
+            🔍 디버그 로그 (임시)
+          </h4>
+          <div className="space-y-2 text-xs font-mono text-red-700 dark:text-red-300">
+            <div>
+              <strong>현재 shareUrl:</strong> 
+              <span className="ml-2 break-all">{shareUrl || '❌ 생성되지 않음'}</span>
+            </div>
+            <div>
+              <strong>window.location.origin:</strong> 
+              <span className="ml-2">{window.location.origin}</span>
+            </div>
+            <div>
+              <strong>window.location.href:</strong> 
+              <span className="ml-2 break-all">{window.location.href}</span>
+            </div>
+            <div>
+              <strong>testResults 존재여부:</strong> 
+              <span className="ml-2">{testResults ? '✅ 있음' : '❌ 없음'}</span>
+            </div>
+            <div>
+              <strong>User Agent:</strong> 
+              <span className="ml-2 break-all">{navigator.userAgent}</span>
+            </div>
+            <div>
+              <strong>플랫폼:</strong> 
+              <span className="ml-2">{navigator.platform}</span>
+            </div>
+            <div>
+              <strong>온라인 상태:</strong> 
+              <span className="ml-2">{navigator.onLine ? '✅ 온라인' : '❌ 오프라인'}</span>
+            </div>
+            <div>
+              <strong>API 요청 상태:</strong> 
+              <span className="ml-2" id="api-status">대기 중...</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {showShareModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
