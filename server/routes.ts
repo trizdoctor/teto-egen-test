@@ -10,37 +10,35 @@ const sharePages = new Map<string, any>();
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create share page
   app.post("/api/share", (req, res) => {
-    console.log("=== SHARE API DEBUG ===");
-    console.log("Request headers:", req.headers);
-    console.log("Request body:", req.body);
-    console.log("Request origin:", req.get('origin'));
-    console.log("Request host:", req.get('host'));
-    
-    const { type, intensity, tetoPercentage, estrogenPercentage } = req.body;
+    try {
+      const { type, intensity, tetoPercentage, estrogenPercentage } = req.body;
 
-    // Generate short random ID
-    const shareId = Math.random().toString(36).substring(2, 8);
-    
-    console.log("Generated shareId:", shareId);
+      // Validate required fields
+      if (!type || !intensity || tetoPercentage === undefined || estrogenPercentage === undefined) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
 
-    // Store the share data
-    const shareData = {
-      type,
-      intensity,
-      tetoPercentage,
-      estrogenPercentage,
-      createdAt: Date.now(),
-    };
-    
-    sharePages.set(shareId, shareData);
-    console.log("Stored share data:", shareData);
-    console.log("Current sharePages size:", sharePages.size);
-    
-    const response = { shareId };
-    console.log("Sending response:", response);
-    console.log("=== END SHARE API DEBUG ===");
+      // Generate short random ID
+      const shareId = Math.random().toString(36).substring(2, 8);
 
-    res.json(response);
+      // Store the share data
+      const shareData = {
+        type,
+        intensity,
+        tetoPercentage,
+        estrogenPercentage,
+        createdAt: Date.now(),
+      };
+      
+      sharePages.set(shareId, shareData);
+      
+      // Set proper headers for JSON response
+      res.setHeader('Content-Type', 'application/json');
+      res.json({ shareId });
+    } catch (error) {
+      console.error('Error in share API:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   });
 
   // Serve share page

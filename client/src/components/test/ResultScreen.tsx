@@ -18,44 +18,15 @@ export function ResultScreen() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
 
-  // Debug environment information
-  useEffect(() => {
-    console.log("=== ENVIRONMENT DEBUG ===");
-    console.log("User Agent:", navigator.userAgent);
-    console.log("Platform:", navigator.platform);
-    console.log("Online:", navigator.onLine);
-    console.log("Cookie enabled:", navigator.cookieEnabled);
-    console.log("Language:", navigator.language);
-    console.log("Languages:", navigator.languages);
-    console.log("Referrer:", document.referrer);
-    console.log("Document URL:", document.URL);
-    console.log("Base URI:", document.baseURI);
-    console.log("Document domain:", document.domain);
-    console.log("Document location:", document.location);
-    console.log("=== END ENVIRONMENT DEBUG ===");
-  }, []);
-
   // Generate share page when test results are available
   useEffect(() => {
     if (testResults) {
-      console.log("=== CLIENT SHARE DEBUG ===");
-      console.log("Test completed. Results:", testResults);
-      console.log("Current window.location:", window.location);
-      console.log("Current window.location.origin:", window.location.origin);
-      console.log("Current window.location.href:", window.location.href);
-
-      // Update debug status
-      const statusElement = document.getElementById('api-status');
-      if (statusElement) statusElement.textContent = '📡 API 요청 시작...';
-
       const requestData = {
         type: testResults.type,
         intensity: testResults.intensity,
         tetoPercentage: testResults.tetoPercentage,
         estrogenPercentage: testResults.estrogenPercentage
       };
-      
-      console.log("Sending request data:", requestData);
 
       // Create share page on backend
       fetch('/api/share', {
@@ -66,43 +37,34 @@ export function ResultScreen() {
         body: JSON.stringify(requestData)
       })
       .then(response => {
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers);
-        console.log("Response ok:", response.ok);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
-        if (statusElement) statusElement.textContent = `📥 응답 받음 (${response.status})`;
+        // Check if response has content
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Invalid response format');
+        }
         
         return response.json();
       })
       .then(data => {
-        console.log("Received response data:", data);
         const baseUrl = window.location.origin;
-        console.log("Using baseUrl:", baseUrl);
         
-        if (data.shareId) {
+        if (data && data.shareId) {
           const newShareUrl = `${baseUrl}/s/${data.shareId}`;
-          console.log("Generated newShareUrl:", newShareUrl);
           setShareUrl(newShareUrl);
-          if (statusElement) statusElement.textContent = `✅ 성공: ${data.shareId}`;
-          console.log("Share page created successfully:", newShareUrl);
         } else {
-          if (statusElement) statusElement.textContent = '❌ shareId 없음';
           console.error("No shareId in response:", data);
+          // Fallback to current URL
+          setShareUrl(window.location.href);
         }
-        console.log("=== END CLIENT SHARE DEBUG ===");
       })
       .catch(error => {
-        console.error('=== ERROR CREATING SHARE PAGE ===');
-        console.error('Error details:', error);
-        console.error('Error stack:', error.stack);
-        
-        if (statusElement) statusElement.textContent = `❌ 오류: ${error.message}`;
-        
+        console.error('Error creating share page:', error);
         // Fallback to current URL
-        const fallbackUrl = window.location.href;
-        console.log("Using fallback URL:", fallbackUrl);
-        setShareUrl(fallbackUrl);
-        console.log("=== END ERROR DEBUG ===");
+        setShareUrl(window.location.href);
       });
     }
   }, [testResults]);
@@ -300,48 +262,7 @@ export function ResultScreen() {
         </Button>
       </div>
 
-      {/* Debug Log Display */}
-      <Card className="bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-700 mt-8">
-        <CardContent className="p-4">
-          <h4 className="text-sm font-semibold text-red-800 dark:text-red-200 mb-3">
-            🔍 디버그 로그 (임시)
-          </h4>
-          <div className="space-y-2 text-xs font-mono text-red-700 dark:text-red-300">
-            <div>
-              <strong>현재 shareUrl:</strong> 
-              <span className="ml-2 break-all">{shareUrl || '❌ 생성되지 않음'}</span>
-            </div>
-            <div>
-              <strong>window.location.origin:</strong> 
-              <span className="ml-2">{window.location.origin}</span>
-            </div>
-            <div>
-              <strong>window.location.href:</strong> 
-              <span className="ml-2 break-all">{window.location.href}</span>
-            </div>
-            <div>
-              <strong>testResults 존재여부:</strong> 
-              <span className="ml-2">{testResults ? '✅ 있음' : '❌ 없음'}</span>
-            </div>
-            <div>
-              <strong>User Agent:</strong> 
-              <span className="ml-2 break-all">{navigator.userAgent}</span>
-            </div>
-            <div>
-              <strong>플랫폼:</strong> 
-              <span className="ml-2">{navigator.platform}</span>
-            </div>
-            <div>
-              <strong>온라인 상태:</strong> 
-              <span className="ml-2">{navigator.onLine ? '✅ 온라인' : '❌ 오프라인'}</span>
-            </div>
-            <div>
-              <strong>API 요청 상태:</strong> 
-              <span className="ml-2" id="api-status">대기 중...</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      
 
       {showShareModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -363,11 +284,6 @@ export function ResultScreen() {
                 <Button
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={() => {
-                    console.log("=== SHARE BUTTON DEBUG ===");
-                    console.log("Current shareUrl:", shareUrl);
-                    console.log("testResults:", testResults);
-                    console.log("typeData:", typeData);
-                    
                     const shareText = language === 'ko' 
                       ? `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%
@@ -382,11 +298,7 @@ ${shareUrl}`
 [Take the personality test yourself]
 ${shareUrl}`;
 
-                    console.log("Generated share text:", shareText);
-                    console.log("Navigator.share available:", !!navigator.share);
-
                     if (navigator.share) {
-                      console.log("Using native share API");
                       navigator.share({
                         title: language === 'ko' ? '테토-에겐 성격 유형 테스트' : 'Teto-Estrogen Personality Test',
                         text: shareText
@@ -394,17 +306,13 @@ ${shareUrl}`;
                         console.error("Native share failed:", error);
                       });
                     } else {
-                      console.log("Using clipboard API");
                       navigator.clipboard.writeText(shareText).then(() => {
-                        console.log("Clipboard write successful");
                         alert(t('공유 내용이 복사되었습니다! 카카오톡에 붙여넣기 해주세요.', 'Share content copied! Please paste it in KakaoTalk.'));
                       }).catch((clipboardError) => {
                         console.error("Clipboard write failed:", clipboardError);
-                        console.log("Falling back to Kakao Story");
                         window.open(`https://story.kakao.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
                       });
                     }
-                    console.log("=== END SHARE BUTTON DEBUG ===");
                     setShowShareModal(false);
                   }}
                 >
