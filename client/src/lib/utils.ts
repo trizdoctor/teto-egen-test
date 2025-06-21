@@ -14,6 +14,15 @@ export function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
+export function generateRandomString(length: number = 3): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 export function calculatePersonalityType(
   answers: number[],
   questions: any[],
@@ -44,7 +53,7 @@ export function calculatePersonalityType(
 
   let personalityType: string;
   let dominantPercentage: number;
-  
+
   if (gender === 'male') {
     personalityType = tetoScore >= estrogenScore ? 'teto-male' : 'estrogen-male';
     dominantPercentage = tetoScore >= estrogenScore ? tetoPercentage : estrogenPercentage;
@@ -55,12 +64,12 @@ export function calculatePersonalityType(
 
   // Determine intensity based on dominant percentage
   let intensity: string;
-  if (dominantPercentage >= 85) {
-    intensity = 'ultra';
-  } else if (dominantPercentage >= 70) {
+  if (dominantPercentage >= 80) {
+    intensity = 'very_strong';
+  } else if (dominantPercentage >= 65) {
     intensity = 'strong';
-  } else if (dominantPercentage >= 55) {
-    intensity = 'normal';
+  } else if (dominantPercentage >= 51) {
+    intensity = 'moderate';
   } else {
     intensity = 'weak';
   }

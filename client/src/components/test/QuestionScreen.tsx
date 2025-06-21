@@ -52,6 +52,10 @@ export function QuestionScreen() {
 
   const handleOptionSelect = (originalIndex: number) => {
     setAnswer(currentQuestionIndex, originalIndex);
+    // 자동으로 다음 문항으로 이동
+    setTimeout(() => {
+      nextQuestion();
+    }, 300);
   };
 
   return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { generateRandomString } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { X, Share2, Link, Facebook, Twitter } from 'lucide-react';
@@ -15,21 +16,30 @@ export function ShareModal({ isOpen, onClose }: ShareModalProps) {
   if (!isOpen) return null;
 
   const shareToFacebook = () => {
-    const url = encodeURIComponent(window.location.href);
+    const baseUrl = window.location.href.split('?')[0];
+    const randomParam = generateRandomString(3);
+    const shareUrl = `${baseUrl}?v=${randomParam}`;
+    const url = encodeURIComponent(shareUrl);
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     onClose();
   };
 
   const shareToTwitter = () => {
     const text = encodeURIComponent(t('테토-에겐 성격 유형 테스트 결과를 확인해보세요!', 'Check out my Teto-Estrogen personality test results!'));
-    const url = encodeURIComponent(window.location.href);
+    const baseUrl = window.location.href.split('?')[0];
+    const randomParam = generateRandomString(3);
+    const shareUrl = `${baseUrl}?v=${randomParam}`;
+    const url = encodeURIComponent(shareUrl);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
     onClose();
   };
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      const baseUrl = window.location.href.split('?')[0];
+      const randomParam = generateRandomString(3);
+      const shareUrl = `${baseUrl}?v=${randomParam}`;
+      await navigator.clipboard.writeText(shareUrl);
       alert(t('링크가 복사되었습니다!', 'Link copied!'));
       onClose();
     } catch (err) {

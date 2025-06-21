@@ -1,15 +1,15 @@
 export const intensityLabels = {
   ko: {
-    ultra: '초강력',
-    strong: '강력',
-    normal: '',
-    weak: '겨우'
+    very_strong: '초강력',
+    strong: '뚜렷한',
+    moderate: '살짝',
+    weak: '약한'
   },
   en: {
-    ultra: 'Ultra',
-    strong: 'Strong',
-    normal: '',
-    weak: 'Barely'
+    very_strong: 'Super Strong',
+    strong: 'Distinct', 
+    moderate: 'Barely',
+    weak: 'Weak'
   }
 };
 

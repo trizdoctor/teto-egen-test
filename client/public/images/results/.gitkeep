@@ -1,0 +1,23 @@
+
+# 판정결과별 이미지 폴더
+# 
+# 파일명 규칙:
+# {type}-{intensity}.jpg
+# 
+# 예시:
+# - teto-male-very_strong.jpg
+# - teto-male-strong.jpg  
+# - teto-male-moderate.jpg
+# - teto-male-weak.jpg
+# - estrogen-male-very_strong.jpg
+# - estrogen-male-strong.jpg
+# - estrogen-male-moderate.jpg
+# - estrogen-male-weak.jpg
+# - teto-female-very_strong.jpg
+# - teto-female-strong.jpg
+# - teto-female-moderate.jpg
+# - teto-female-weak.jpg
+# - estrogen-female-very_strong.jpg
+# - estrogen-female-strong.jpg
+# - estrogen-female-moderate.jpg
+# - estrogen-female-weak.jpg
