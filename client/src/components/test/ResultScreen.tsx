@@ -39,7 +39,7 @@ export function ResultScreen() {
       .then(response => response.json())
       .then(data => {
         const baseUrl = window.location.origin;
-        const newShareUrl = `${baseUrl}/s/${data.shareId}${generateRandomString(3)}`;
+        const newShareUrl = `${baseUrl}/s/${data.shareId}`;
         setShareUrl(newShareUrl);
         console.log("Share page created:", newShareUrl);
       })
