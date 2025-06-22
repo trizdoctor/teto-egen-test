@@ -5,6 +5,7 @@ import { personalityTypes } from '@/data/personalityTypes';
 import { getIntensityLabel, getIntensityColor } from '@/lib/intensityLabels';
 import { getPersonalizedMessage } from '@/lib/personalizedMessages';
 import { getStaticShareUrl } from '@/lib/staticShare';
+import { getLocalImageFilename } from '@/lib/resultImages';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -73,21 +74,20 @@ export function ResultScreen() {
 
   return (
     <div className="animate-slide-up">
-      {/* Background image based on intensity */}
+      {/* Elegant subtle background pattern */}
       <div 
-        className="absolute inset-0 z-0 opacity-10"
+        className="absolute inset-0 z-0 opacity-5"
         style={{
-          backgroundImage: `url(${typeData.intensityImages?.[testResults.intensity] || typeData.image})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundImage: 'radial-gradient(circle at 25% 25%, #f0f9ff 0%, transparent 50%), radial-gradient(circle at 75% 75%, #fef3c7 0%, transparent 50%)',
+          backgroundSize: '400px 400px',
+          backgroundPosition: '0 0, 200px 200px'
         }}
       />
 
       <div className="relative z-10 text-center mb-8">
-        <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-xl overflow-hidden">
+        <div className="w-48 h-48 mx-auto mb-6 rounded-2xl border-4 border-white shadow-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
           <img
-            src={typeData.intensityImages?.[testResults.intensity] || typeData.image}
+            src={`/images/results/${getLocalImageFilename(testResults.type, testResults.intensity, testResults.gender)}`}
             alt="Personality type"
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -95,6 +95,7 @@ export function ResultScreen() {
             }}
           />
         </div>
+        
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('당신의 성격 유형', 'Your Personality Type')}
         </h2>
@@ -184,11 +185,11 @@ export function ResultScreen() {
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600">
               <img
-                src={typeData.compatibleImage}
+                src={`/images/results/${testResults.type.includes('teto') ? 'e' : 't'}${testResults.intensity === 'very_strong' ? 'v' : testResults.intensity === 'strong' ? 's' : testResults.intensity === 'weak' ? 'w' : 'm'}${testResults.gender === 'male' ? 'f' : 'm'}.png`}
                 alt="Compatible type"
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80';
+                  e.currentTarget.src = typeData.compatibleImage;
                 }}
               />
             </div>
@@ -255,17 +256,13 @@ export function ResultScreen() {
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={() => {
                     const shareText = language === 'ko' 
-                      ? `테토-에겐 성격 유형 테스트
-
-[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+                      ? `[ 나는 ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - 테토 성향 ${testResults.tetoPercentage}%, 에겐 성향 ${testResults.estrogenPercentage}%
 - ${typeData.description}
 
 [여러분도 나의 성향을 테스트해보세요]
 ${shareUrl}`
-                      : `Teto-Estrogen Personality Test
-
-[ I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
+                      : `[ I am ${getIntensityLabel(testResults.intensity, language)} ${typeData.title}! ]
 - Teto Tendency ${testResults.tetoPercentage}%, Estrogen Tendency ${testResults.estrogenPercentage}%
 - ${typeData.description}
 

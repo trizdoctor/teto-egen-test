@@ -1,8 +1,34 @@
 
+// 타입과 강도, 성별을 기반으로 로컬 이미지 파일명을 반환하는 함수
+export function getLocalImageFilename(type: string, intensity: string, gender: string): string {
+  // type에서 personality만 추출 (teto-male -> teto)
+  const personality = type.includes('teto') ? 't' : 'e';
+  
+  // intensity 매핑
+  const intensityMap: Record<string, string> = {
+    'very_strong': 'v',
+    'strong': 's', 
+    'moderate': 'm',
+    'weak': 'w'
+  };
+  
+  // gender 매핑
+  const genderMap: Record<string, string> = {
+    'male': 'm',
+    'female': 'f'
+  };
+  
+  const intensityCode = intensityMap[intensity] || 'm';
+  const genderCode = genderMap[gender] || 'm';
+  
+  return `${personality}${intensityCode}${genderCode}.png`;
+}
+
 // 결과별 이미지 URL을 반환하는 헬퍼 함수
-export function getResultImageUrl(type: string, intensity: string): string {
-  // 로컬 이미지가 있는지 확인하고, 없으면 기본 Unsplash 이미지 사용
-  const localImageUrl = `/images/results/${type}-${intensity}.jpg`;
+export function getResultImageUrl(type: string, intensity: string, gender: string = 'male'): string {
+  // 로컬 이미지 파일명 생성
+  const localFilename = getLocalImageFilename(type, intensity, gender);
+  const localImageUrl = `/images/results/${localFilename}`;
   
   // 기본 이미지 매핑 (현재 Unsplash 이미지들)
   const defaultImages: Record<string, Record<string, string>> = {
