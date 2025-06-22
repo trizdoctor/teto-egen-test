@@ -1,5 +1,6 @@
 import { useTest } from '@/contexts/TestContext';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { WelcomeScreen } from '@/components/test/WelcomeScreen';
 import { GenderSelection } from '@/components/test/GenderSelection';
 import { QuestionScreen } from '@/components/test/QuestionScreen';
@@ -33,9 +34,7 @@ export default function Test() {
       <main className="max-w-4xl mx-auto px-4 py-8 flex-1">
         {renderScreen()}
       </main>
-      
-      
-      
+      <Footer />
       <ShareModal />
     </div>
   );

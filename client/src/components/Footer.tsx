@@ -9,7 +9,25 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-4 text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            developed by Dunkin
+            Created by{' '}
+            <a 
+              href="https://blog.naver.com/doyouknowthis" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              DYKT
+            </a>
+            {' '}|{' '}
+            Powered by{' '}
+            <a 
+              href="https://replit.com/refer/trizdoctor" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Replit
+            </a>
           </p>
         </div>
       </div>
