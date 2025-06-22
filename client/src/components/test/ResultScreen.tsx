@@ -12,6 +12,8 @@ import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 import { Share2, RotateCcw, CheckCircle, MessageCircle } from 'lucide-react';
+import { CoupangAd } from '@/components/CoupangAd';
+
 
 export function ResultScreen() {
   const { testResults, resetTest } = useTest();
@@ -27,12 +29,12 @@ export function ResultScreen() {
       console.log("type:", testResults.type);
       console.log("intensity:", testResults.intensity);  
       console.log("gender:", testResults.gender);
-      
+
       // Parse type to extract personality type only (remove gender)
       const personalityType = testResults.type.includes('teto') ? 'teto' : 'estrogen';
       console.log("Parsed personality type:", personalityType);
       console.log("=== END RESULT SCREEN DEBUG ===");
-      
+
       const staticSharePath = getStaticShareUrl(personalityType, testResults.intensity, testResults.gender);
       const fullShareUrl = `${window.location.origin}${staticSharePath}`;
       setShareUrl(fullShareUrl);
@@ -67,9 +69,8 @@ export function ResultScreen() {
   };
 
   const handleRetake = () => {
-    resetTest();
-    // Reset URL to clean state
-    window.history.pushState({}, '', window.location.href.split('?')[0]);
+    // 페이지 전체를 리로드하여 모든 상태를 초기화
+    window.location.href = window.location.origin + window.location.pathname;
   };
 
   return (
@@ -95,7 +96,7 @@ export function ResultScreen() {
             }}
           />
         </div>
-        
+
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('당신의 성격 유형', 'Your Personality Type')}
         </h2>
@@ -205,11 +206,16 @@ export function ResultScreen() {
         </CardContent>
       </Card>
 
-      {/* AdSense Banner */}
+      {/* 광고 영역 (Advertisement Area) */}
       <Card className="bg-white dark:bg-gray-800 shadow-lg mb-8">
-        <CardContent className="p-6 text-center">
-          <div className="text-gray-500 dark:text-gray-400 text-sm">
-            <p>{t('광고 영역', 'Advertisement Area')}</p>
+        <CardContent className="p-6">
+          <div className="text-center mb-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 px-2">
+              이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+            </p>
+          </div>
+          <div className="w-full flex justify-center">
+            <CoupangAd />
           </div>
         </CardContent>
       </Card>
@@ -224,7 +230,7 @@ export function ResultScreen() {
           {t('결과 공유하기', 'Share Results')}
         </Button>
         <Button
-          onClick={handleRetake}
+          onClick={() => window.location.reload()}
           variant="secondary"
           className="flex items-center justify-center"
         >
@@ -233,7 +239,7 @@ export function ResultScreen() {
         </Button>
       </div>
 
-      
+
 
       {showShareModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

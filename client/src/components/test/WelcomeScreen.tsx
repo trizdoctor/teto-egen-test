@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Play, Flame, Heart } from 'lucide-react';
 import { getRandomHeroImage } from '@/data/heroImages';
+import { CoupangAd } from '@/components/CoupangAd';
 
 export function WelcomeScreen() {
   const { setCurrentScreen } = useTest();
@@ -48,7 +49,7 @@ export function WelcomeScreen() {
           {t('테스트 시작하기', 'Start Test')}
         </Button>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
           <Card className="bg-white dark:bg-gray-800 shadow-lg">
             <CardContent className="p-6">
               <div className="w-16 h-16 bg-gradient-to-br from-teto to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -62,7 +63,7 @@ export function WelcomeScreen() {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-white dark:bg-gray-800 shadow-lg">
             <CardContent className="p-6">
               <div className="w-16 h-16 bg-gradient-to-br from-estrogen to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -77,6 +78,22 @@ export function WelcomeScreen() {
             </CardContent>
           </Card>
         </div>
+
+        {/* 광고 영역 (Advertisement Area) */}
+        <Card className="bg-white dark:bg-gray-800 shadow-lg mt-8">
+          <CardContent className="p-6">
+            <div className="text-center mb-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 px-2">
+                이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+              </p>
+            </div>
+            <div className="w-full flex justify-center">
+              <div id="coupang-ad-area" className="w-full max-w-[680px] min-h-[140px] flex justify-center items-center bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <CoupangAd />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
